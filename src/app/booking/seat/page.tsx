@@ -9,6 +9,9 @@ export default function SeatPage() {
   const bookedSeats = ["1A", "1F", "3C", "3D", "5A", "5B", "7E", "7F", "9B", "9E"];
 
   const departFlight = useFlightStore(state => state.departFlight);
+
+
+
   const date = departFlight?.departure;
   const departureTime = date
     ? date.toLocaleDateString('en-US', {
