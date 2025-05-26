@@ -40,6 +40,10 @@
   text-align: center;
 }
 
+.passDetails p {
+  text-transform: capitalize;
+}
+
 .passFlight {
   display: flex;
   flex-direction: row;

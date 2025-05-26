@@ -1,76 +1,94 @@
 "use client";
 import styles from "./pass.module.css";
+import { useSeatStore } from "@/stores/seatStore";
+import { useFlightStore } from "@/stores/flightStore";
+import { usePassengerStore } from "@/stores/passengerStore";
 
 export default function Baggage() {
-  const mockDepartingFlight = {
-    flightName: "JFK",
-    location: "London",
-    date: new Date("2025/03/28").toDateString(),
-    time: new Date().toTimeString()
-  };
+  // const tickets = mockData
 
-  const mockArrivingFlight = {
-    flightName: "LHR",
-    location: "Kokomo?",
-    date: new Date("2025/03/30").toDateString(),
-    time: new Date().toTimeString()
-  };
+  const tickets = useSeatStore(tickets => tickets.selectedSeats);
+  console.log(tickets)
 
-  const mockData = [
-      {id: 1234567890,departingFlight: mockDepartingFlight, arrivingFlight: mockArrivingFlight, passenger: "Dylan Williams", flight: "Boeing 737", seat: "8A", gate:"B", terminal:"X"},
-      {id: 2345678901, departingFlight: mockDepartingFlight, arrivingFlight: mockArrivingFlight, passenger: "Ryan Williams", flight: "Boeing 737", seat: "8B", gate:"B", terminal:"X"},
-      {id: 3456789012, departingFlight: mockDepartingFlight, arrivingFlight: mockArrivingFlight, passenger: "Kokomo Williams", flight: "Boeing 737", seat: "8C", gate:"B", terminal:"X"},
-      {id: 3456789012, departingFlight: mockDepartingFlight, arrivingFlight: mockArrivingFlight, passenger: "Kokomo Williams", flight: "Boeing 737", seat: "8C", gate:"B", terminal:"X"},
-      {id: 3456789012, departingFlight: mockDepartingFlight, arrivingFlight: mockArrivingFlight, passenger: "Kokomo Williams", flight: "Boeing 737", seat: "8C", gate:"B", terminal:"X"},
-      {id: 3456789012, departingFlight: mockDepartingFlight, arrivingFlight: mockArrivingFlight, passenger: "Kokomo Williams", flight: "Boeing 737", seat: "8C", gate:"B", terminal:"X"},
-      {id: 3456789012, departingFlight: mockDepartingFlight, arrivingFlight: mockArrivingFlight, passenger: "Kokomo Williams", flight: "Boeing 737", seat: "8C", gate:"B", terminal:"X"},
-    ];
+  const start = useFlightStore(state => state.departFlight);
+  const end = useFlightStore(state => state.returnFlight);
+
+  const passengers = [
+    ...(usePassengerStore(state => state.adult) ?? []),
+    ...(usePassengerStore(state => state.child) ?? []),
+    ...(usePassengerStore(state => state.infant) ?? [])
+  ];
+
+  const departDate = start?.departure.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+  const departTime = start?.departure.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+
+  const arriveDate = end?.arrival.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+  const arriveTime = end?.arrival.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+
   
   return (
     <div className={styles.passContainer}>
-      {mockData.map((ticket, index) => 
+      {tickets.map((ticket, index) => 
         (
           <div key={index} className={styles.passTicket}>
             <div className={styles.passFlight}>
               <div>
-                <h1>{ticket.departingFlight.flightName}</h1>
-                <h2>{ticket.departingFlight.location}</h2>
-                <p>{ticket.departingFlight.date}</p>
-                <p>{ticket.departingFlight.time}</p>
+                <h1>{start?.id.split("-")[0]}</h1>
+                <h2>{start?.location}</h2>
+                <p>{departDate}</p>
+                <p>{departTime}</p>
               </div>
               <div>
-                <h1>{ticket.arrivingFlight.flightName}</h1>
-                <h2>{ticket.arrivingFlight.location}</h2>
-                <p>{ticket.arrivingFlight.date}</p>
-                <p>{ticket.arrivingFlight.time}</p>
+                <h1>{end?.id.split("-")[0]}</h1>
+                <h2>{end?.location}</h2>
+                <p>{arriveDate}</p>
+                <p>{arriveTime}</p>
               </div>
             </div>
             <div className={styles.passDetails}>
               <div>
-                <h3>Passenger</h3>
-                <p>{ticket.passenger}</p>
+                <h3>Class</h3>
+                <p>{ticket.type}</p>
               </div>
               <div>
-                <h3>Flight</h3>
-                <p>{ticket.flight}</p>
+                <h3>Passenger</h3>
+                <p>{passengers[index]?.type}</p>
               </div>
             </div>
             <div className={styles.passDetails}>
               <div>
                 <h3>Seat</h3>
-                <p>{ticket.seat}</p>
+                <p>{ticket.seatId}</p>
               </div>
               <div>
                 <h3>Gate</h3>
-                <p>{ticket.gate}</p>
+                <p>5B</p>
               </div>
               <div>
                 <h3>Terminal</h3>
-                <p>{ticket.terminal}</p>
+                <p>X</p>
               </div>
             </div>
             <div className={styles.passBarcode}>
-              {ticket.id}
+              {end?.id.split("-")[1]}
             </div>
           </div>
         )
