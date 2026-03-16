@@ -1,5 +1,4 @@
 "use server";
-export const revalidate = 300;
 
 import styles from "./page.module.css";
 
