@@ -28,7 +28,7 @@ export default function Baggage() {
   // No idea what the tax should be lol
   const taxTotal = (((ticketTotal + drinksTotal + baggageTotal + foodTotal) / 100) * 12).toFixed(2);
 
-  const finalTotal = ((ticketTotal + drinksTotal + foodTotal + baggageTotal + parseFloat(taxTotal)).toFixed(2)).toString();
+  const finalTotal = parseFloat((ticketTotal + drinksTotal + foodTotal + baggageTotal + parseFloat(taxTotal)).toFixed(2));
 
   return (
     <div className={styles.splitSection}>
